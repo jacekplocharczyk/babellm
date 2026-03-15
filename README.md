@@ -280,7 +280,7 @@ Adding OpenAI, Anthropic, or other providers requires only:
 ### Install dependencies
 
 ```bash
-uv sync
+uv sync --all-extras
 ```
 
 Or manually add:

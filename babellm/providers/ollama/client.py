@@ -167,6 +167,14 @@ class OllamaProvider(BaseLLMProvider):
         raw = await self._http.apost("/api/embed", payload)
         return ser.ollama_to_embedding_response(raw, model)
 
+    def close(self) -> None:
+        """Close HTTP client."""
+        self._http.close()
+
+    async def aclose(self) -> None:
+        """Close async HTTP client."""
+        await self._http.aclose()
+
     def __enter__(self) -> OllamaProvider:
         """Context manager entry."""
         self._http.__enter__()

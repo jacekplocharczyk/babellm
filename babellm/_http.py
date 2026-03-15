@@ -135,7 +135,11 @@ class HTTPClient:
         try:
             raw = error.response.json()
         except Exception:
-            raw = {"message": error.response.text}
+            try:
+                text = error.response.text
+            except Exception:
+                text = str(error)
+            raw = {"message": text}
 
         if status == 401:
             from .exceptions import AuthenticationError

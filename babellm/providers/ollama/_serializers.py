@@ -19,15 +19,15 @@ def messages_to_ollama(messages: list[Message]) -> list[dict[str, str]]:
     return [{"role": msg.role.value, "content": msg.content} for msg in messages]
 
 
-def ollama_to_usage(raw: dict[str, Any]) -> Usage | None:
+def ollama_to_usage(raw: dict[str, Any]) -> Usage:
     """Extract usage info from Ollama response."""
-    if "eval_count" in raw or "prompt_eval_count" in raw:
-        return Usage(
-            prompt_tokens=raw.get("prompt_eval_count", 0),
-            completion_tokens=raw.get("eval_count", 0),
-            total_tokens=raw.get("prompt_eval_count", 0) + raw.get("eval_count", 0),
-        )
-    return None
+    prompt_tokens = raw.get("prompt_eval_count", 0)
+    completion_tokens = raw.get("eval_count", 0)
+    return Usage(
+        prompt_tokens=prompt_tokens,
+        completion_tokens=completion_tokens,
+        total_tokens=prompt_tokens + completion_tokens,
+    )
 
 
 def ollama_to_chat_response(raw: dict[str, Any], model: str) -> ChatResponse:
@@ -79,8 +79,7 @@ def ollama_to_generate_chunk(raw: dict[str, Any], model: str) -> GenerateChunk:
 
 def ollama_to_embedding_response(raw: dict[str, Any], model: str) -> EmbeddingResponse:
     """Convert Ollama embedding response to EmbeddingResponse."""
-    embeddings = raw.get("embeddings", [])
-    embedding = embeddings[0] if embeddings else []
+    embedding = raw.get("embedding", raw.get("embeddings", [{}])[0] if raw.get("embeddings") else [])
     return EmbeddingResponse(
         embedding=embedding,
         model=model,

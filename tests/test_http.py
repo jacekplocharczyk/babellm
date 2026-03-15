@@ -1,9 +1,9 @@
 """Tests for HTTPClient."""
 
 
+import httpx
 import pytest
 import respx
-import httpx
 
 from babellm._http import HTTPClient
 from babellm.exceptions import (
@@ -205,7 +205,7 @@ class TestContextManagers:
         client = HTTPClient(base_url="http://localhost:11434")
         with client:
             # Trigger client creation
-            assert client._client is None or True
+            assert client._client is None
         # After exit, client should be closed
 
     @pytest.mark.asyncio

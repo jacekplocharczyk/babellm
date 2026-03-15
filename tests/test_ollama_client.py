@@ -1,8 +1,8 @@
 """Tests for OllamaProvider."""
 
+import httpx
 import pytest
 import respx
-import httpx
 
 from babellm.providers.ollama.client import OllamaProvider
 from babellm.types import Message, Role
